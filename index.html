@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Deploying at domain root; change if you serve under a subpath -->
+  <base href="/">
+
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Revochamp – AI UI Builder & Flutter Code Generator</title>
+
+<meta name="description" content="Revochamp CodeGen AI is an AI-powered visual UI builder and code generator for Flutter, React, and Angular. Create responsive UIs, export clean code faster.">
+
+<link rel="canonical" href="https://revochamp.pages.dev/">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Revochamp – AI UI Builder & Code Generator">
+<meta property="og:description" content="Design visually. Export clean code for Flutter, React, Angular.">
+<meta property="og:image" content="https://revochamp.pages.dev/assets/preview.png">
+<meta property="og:url" content="https://revochamp.pages.dev/">
+<meta property="og:type" content="website">
+<meta name="robots" content="index,follow,max-image-preview:large">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Revochamp – AI UI Builder & Code Generator">
+<meta name="twitter:description" content="Build UI with AI. Export clean code.">
+<meta name="twitter:image" content="https://revochamp.pages.dev/assets/preview.png">
+
+<!-- Google Search Console -->
+<!-- <meta name="google-site-verification" content="ug4Ghw8OcIBLRUXby_Djh948Wi_1bd26Goymj5BHg9U" /> -->
+<meta name="google-site-verification" content="AL6DBFF8Rl9_p35qT0ZHv24fe9FJiQ3DG7lUi_9vAxE" />
+<!-- google-site-verification=AL6DBFF8Rl9_p35qT0ZHv24fe9FJiQ3DG7lUi_9vAxE -->
+<!-- PWA / Icons -->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Revochamp">
+<link rel="apple-touch-icon" href="icons/Icon-192.png">
+<link rel="icon" type="image/png" href="favicon.png"/>
+<link rel="manifest" href="manifest.json">
+
+<!-- Perf hints -->
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+  <!-- Structured data -->
+  <!-- <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Revochamp",
+    "url": "https://revochamp.surge.sh/",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Web",
+    "description": "AI-powered visual UI builder and code generator for Flutter, React, Angular.",
+    "image": "https://revochamp.surge.sh/assets/preview.png",
+    "creator": { "@type": "Organization", "name": "Revochamp" }
+  }
+  </script> -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Revochamp",
+  "url": "https://revochamp.pages.dev/",
+  "logo": "https://revochamp.pages.dev/assets/logo.png",
+  "image": "https://revochamp.pages.dev/assets/preview.png",
+  "description": "AI-powered UI builder and code generator for Flutter, React, and Angular. Design stunning interfaces fast, preview instantly, and export clean code for web and mobile.",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "creator": {
+    "@type": "Organization",
+    "name": "Revochamp",
+    "url": "https://revochamp.pages.dev/"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD",
+    "category": "Free"
+  },
+  "sameAs": [
+    "https://twitter.com/revochamp",
+    "https://www.linkedin.com/company/revochamp",
+    "https://github.com/kishorekumar1993"
+  ]
+}
+</script>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <style>
+    /* ===== Global App Loader (pre-Flutter) ===== */
+    #app-loader {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background:
+        radial-gradient(1200px 600px at 70% -10%, rgba(59,130,246,.35), transparent 60%),
+        radial-gradient(900px 500px at -10% 110%, rgba(6,182,212,.30), transparent 55%),
+        #0f1220;
+      color: #fff; z-index: 99999;
+      transition: opacity .35s ease, visibility .35s ease;
+    }
+    #app-loader.hidden { opacity: 0; visibility: hidden; }
+    .app-loader-box {
+      width: min(520px, 92vw);
+      padding: 28px 24px;
+      border-radius: 16px;
+      background: rgba(22,27,43,.55);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 10px 40px rgba(0,0,0,.35);
+      text-align: center;
+    }
+    .app-brand { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:12px; }
+    .app-logo { width:42px; height:42px; border-radius:10px; background:linear-gradient(135deg,#3B82F6,#06B6D4); box-shadow:0 6px 18px rgba(6,182,212,.35); }
+    .app-title { font-weight:800; letter-spacing:.2px; font-size:20px; }
+    .app-sub { opacity:.85; font-size:13px; margin-top:4px; }
+    .app-progress { margin:16px 0 6px; height:10px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.08); }
+    .app-progress > i { display:block; height:100%; width:28%; background:linear-gradient(90deg,rgba(255,255,255,.0),rgba(255,255,255,.5),rgba(255,255,255,.0)); animation: slide 1.2s linear infinite; }
+    @keyframes slide { 0% { transform: translateX(-100%);} 100% { transform: translateX(350%);} }
+    .app-hint { font-size:12px; opacity:.7; }
+    @media (prefers-reduced-motion: reduce) { .app-progress > i { animation: none; width:45%; } }
+
+    /* OCR overlay */
+    #ocr-loading {
+      display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      background:rgba(0,0,0,.85); color:#fff; padding:20px 24px; border-radius:12px; z-index:10000; text-align:center; width:360px;
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+    .progress-bar { width:100%; height:10px; background:#2e2e2e; border-radius:999px; margin:12px 0 6px; overflow:hidden; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,#4caf50,#66bb6a); width:0%; transition:width 200ms linear; }
+    #ocr-status { opacity:.9; font-size:13px; }
+    #ocr-loading button { margin-top:10px; background:#444; color:#fff; border:0; border-radius:8px; padding:8px 12px; cursor:pointer; }
+
+    /* Save Loader */
+    #save-loader { display:none; position:fixed; inset:0; z-index:10000; }
+    #save-loader .backdrop { position:absolute; inset:0; background:rgba(0,0,0,.55); }
+    #save-loader .panel {
+      position:relative; max-width:520px; width:92vw; margin:10vh auto 0; padding:22px 20px; border-radius:14px;
+      background:rgba(22,27,43,.85); color:#fff; box-shadow:0 12px 40px rgba(0,0,0,.35);
+    }
+    #save-progress-rail { margin:14px 0 8px; height:10px; border-radius:999px; overflow:hidden; background:rgba(255,255,255,.12); }
+    #save-progress-fill { height:100%; width:0%; background:linear-gradient(90deg,rgba(255,255,255,.15),rgba(255,255,255,.65),rgba(255,255,255,.15)); transition:width 120ms linear; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+
+<body>
+    <!-- BEGIN: SEO content island (H1/H2/H3 + ~900 words). Visible to crawlers, hidden after Flutter paints. -->
+  <section id="seo-content" style="max-width: 960px; margin: 24px auto; padding: 0 16px; font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;">
+    <h1>Revochamp CodeGen AI — From PRD to Production-Ready Code</h1>
+
+    <p>
+      Revochamp CodeGen AI is a developer platform that converts product intent into running software. By aligning product requirements with design and implementation, teams reduce the time it takes to transform an idea into a high-quality, verifiable release. Whether you are drafting a PRD, sketching a user flow, defining a schema, or planning the first API, Revochamp generates structured artifacts that engineers can run, test, and evolve. The result is faster delivery, fewer handoffs, and a transparent record of how each feature moves from concept to production.
+    </p>
+
+    <h2>Why Teams Choose Revochamp</h2>
+    <p>
+      Traditional delivery breaks momentum with context switching: product writes a document, design builds wireframes, frontend scaffolds screens, backend shapes data models, and QA verifies expectations—often in disconnected tools. Revochamp compresses this loop by keeping every artifact linked to its source of truth. When product language shifts, the impact is visible across UI, contracts, and tests. When a model evolves, downstream code updates stay aligned. This traceability reduces rework and helps teams ship with confidence.
+    </p>
+
+    <h2>Key Capabilities</h2>
+
+    <h3>1. PRD to UI Scaffolding</h3>
+    <p>
+      Revochamp interprets structured requirements and generates responsive screens for modern frameworks, including Flutter and React. Layouts, states, and form logic are scaffolded with accessibility and responsiveness in mind. Engineers remain in control—generated code is clean, idiomatic, and ready for refinement in your IDE. The goal is not to replace craftsmanship, but to remove boilerplate so teams spend time on product value.
+    </p>
+
+    <h3>2. API Contracts and Clean Architecture Models</h3>
+    <p>
+      Define endpoints once and propagate the contract everywhere it matters. Revochamp generates models, repositories, and services with clear separation of concerns. Your project benefits from predictable structure, easier testing, and consistent naming. Because contracts are versioned and linked to PRDs and UI, you can track changes across releases and understand precisely what altered, when, and why.
+    </p>
+
+    <h3>3. End-to-End Traceability</h3>
+    <p>
+      Every deliverable is connected: a feature points to its PRD paragraphs, which link to the screen sections and API operations they informed. This chain of custody accelerates reviews, clarifies acceptance criteria, and supports compliance. When stakeholders ask how a behavior is implemented, you can show the exact path from requirement to code and test.
+    </p>
+
+    <h3>4. Quality, Testing, and Guardrails</h3>
+    <p>
+      Revochamp encourages quality by default. From field validation and type-safe models to lint presets and example tests, the generated foundation nudges teams toward maintainable patterns. You can integrate your CI, add coverage thresholds, and plug in security scanning with minimal friction. Guardrails do not limit you; they simply make the right practices easy to follow.
+    </p>
+
+    <h2>Who Benefits</h2>
+    <p>
+      <strong>Product teams</strong> gain faster feedback loops and clearer acceptance criteria. <strong>Designers</strong> see their flows respected in actual components and constraints. <strong>Developers</strong> avoid repetitive setup and gain consistent project structure. <strong>Engineering leaders</strong> get better predictability, faster onboarding, and visibility into change impact. Whether you are building greenfield products or refining a mature system, Revochamp helps you deliver value without the drag of scattered processes.
+    </p>
+
+    <h2>How It Fits Your Stack</h2>
+    <p>
+      Revochamp is framework-friendly. If your frontend is Flutter, the platform can produce screens, widgets, and form components that match your theming strategy. If you operate a service-oriented backend, contracts are portable and models map cleanly into your preferred stack. You maintain ownership of your repositories, pipelines, and environments. Revochamp plugs into what you already use; it does not force a monolith or a rewrite.
+    </p>
+
+    <h2>Security and Governance</h2>
+    <p>
+      The platform supports role-based access, secret management via your cloud provider, and audit trails for generated changes. Because artifacts are linked across requirements and code, governance is not an afterthought: you can demonstrate the origin of a behaviour, the review that approved it, and the build that shipped it.
+    </p>
+
+    <h2>Getting Started</h2>
+    <p>
+      Explore examples, generate your first screen from a PRD snippet, or request a guided demo. You will see how quickly a raw requirement becomes a running prototype, then a production-ready slice with real data. The more you connect your existing structure—design tokens, API conventions, testing presets—the more Revochamp adapts to your standards. Automation where it helps, flexibility where it matters.
+    </p>
+
+    <p>
+      Revochamp CodeGen AI is built for teams who want to move quickly without sacrificing clarity. By unifying requirements, design intent, contracts, and code, it shortens the path between idea and outcome—and keeps that path visible. If your goal is to ship reliable software at a steady cadence, Revochamp provides the rails to keep momentum without losing control.
+    </p>
+  </section>
+  <!-- END: SEO content island -->
+
+  <!-- (Optional) noscript hint -->
+  <noscript>
+    <style>#seo-content{display:block!important}</style>
+    <div style="max-width:960px;margin:16px auto;padding:0 16px;color:#b91c1c">
+      This site works best with JavaScript enabled. Basic information is shown above.
+    </div>
+  </noscript>
+
+  <!-- Loader -->
+  <div id="app-loader" aria-busy="true" aria-live="polite">
+    <div class="app-loader-box">
+      <div class="app-brand">
+        <div class="app-logo" aria-hidden="true"></div>
+        <div>
+          <div class="app-title">Revochamp</div>
+          <div class="app-sub">AI UI Builder & Code Generator</div>
+        </div>
+      </div>
+      <div class="app-progress"><i></i></div>
+      <div class="app-hint">Optimizing and loading…</div>
+    </div>
+  </div>
+
+  <!-- OCR modal -->
+  <div id="ocr-loading" role="dialog" aria-modal="true" aria-label="OCR progress">
+    <strong>Processing OCR</strong>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div id="ocr-status">Initializing…</div>
+    <button onclick="window.cancelOCR()">Cancel</button>
+  </div>
+
+  <!-- Save Files UI -->
+  <button id="saveBtn"
+          onclick="saveFilesWithUserGesture()"
+          style="position: fixed; top: 10px; right: 10px; z-index: 1000; display: none; padding: 10px 20px; font-size: 14px;">
+    📁 Save Files
+  </button>
+
+  <!-- Save Loader modal -->
+  <div id="save-loader" role="dialog" aria-modal="true" aria-label="Saving files">
+    <div class="backdrop"></div>
+    <div class="panel">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:4px;">
+        <div style="width:32px; height:32px; border-radius:50%; border:3px solid rgba(255,255,255,.25); border-top-color:#fff; animation:spin 1s linear infinite;"></div>
+        <strong>Saving files…</strong>
+      </div>
+
+      <div id="save-progress-rail">
+        <div id="save-progress-fill"></div>
+      </div>
+
+      <div id="save-status" style="font-size:13px; opacity:.9;">Starting…</div>
+      <div id="save-metrics" style="font-size:12px; opacity:.75; margin-top:4px;">0/0 files • 0 KB of 0 KB</div>
+
+      <div style="display:flex; gap:8px; margin-top:12px; justify-content:flex-end;">
+        <button id="save-cancel" style="background:#444; color:#fff; border:0; border-radius:10px; padding:8px 12px; cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hide the loader when Flutter paints (AFTER the loader is in the DOM) -->
+  <script>
+    (function () {
+      const loader = document.getElementById('app-loader');
+      if (!loader) return;
+      const hide = () => loader.classList.add('hidden');
+      window.addEventListener('flutter-first-frame', hide, { once: true });
+      setTimeout(hide, 12000); // safety
+      window.addEventListener('error', () => setTimeout(hide, 1200), { once: true });
+    })();
+  </script>
+
+  <!-- Flutter bootstrap (do NOT set window.flutterConfiguration anywhere) -->
+  <script src="flutter_bootstrap.js" defer></script>
+
+  <!-- App JS: OCR (lazy), utilities, file-saving -->
+  <script type="module">
+    // ===== Lazy-load Tesseract only when needed =====
+    let _tessLoadingPromise = null;
+    async function _ensureTesseract() {
+      if (window.Tesseract) return;
+      if (!_tessLoadingPromise) {
+        _tessLoadingPromise = new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = 'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js';
+          s.async = true;
+          s.onload = () => resolve();
+          s.onerror = () => reject(new Error('Failed to load Tesseract'));
+          document.head.appendChild(s);
+        });
+      }
+      await _tessLoadingPromise;
+    }
+
+    // ===== OCR progress UI =====
+    function showProgress(p = 0, status = 'Processing...') {
+      const box = document.getElementById('ocr-loading');
+      const fill = document.querySelector('.progress-fill');
+      const txt = document.getElementById('ocr-status');
+      if (!box || !fill || !txt) return;
+      box.style.display = 'block';
+      fill.style.width = `${Math.max(0, Math.min(100, p))}%`;
+      txt.textContent = status;
+    }
+    function hideProgress() {
+      const box = document.getElementById('ocr-loading');
+      if (box) box.style.display = 'none';
+    }
+
+    // ===== Canvas/image helpers =====
+    function loadImage(dataUrl) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error('Failed to load image'));
+        img.src = dataUrl;
+      });
+    }
+    function canvasFrom(imgOrCanvas, w, h) {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(imgOrCanvas, 0, 0, w, h);
+      return c;
+    }
+    function toGrayUint8(ctx, w, h) {
+      const img = ctx.getImageData(0, 0, w, h);
+      const d = img.data;
+      const gray = new Uint8ClampedArray(w * h);
+      for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+        gray[j] = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0;
+      }
+      return { gray, img };
+    }
+    function fromGrayToCtx(gray, img, ctx) {
+      const d = img.data;
+      for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+        const g = gray[j];
+        d[i] = d[i + 1] = d[i + 2] = g;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+    function median3x3(gray, w, h) {
+      const out = new Uint8ClampedArray(gray.length);
+      const get = (x, y) => gray[y * w + x];
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const n = [
+            get(x - 1, y - 1), get(x, y - 1), get(x + 1, y - 1),
+            get(x - 1, y), get(x, y), get(x + 1, y),
+            get(x - 1, y + 1), get(x, y + 1), get(x + 1, y + 1)
+          ];
+          n.sort((a, b) => a - b);
+          out[y * w + x] = n[4];
+        }
+      }
+      // copy borders
+      for (let x = 0; x < w; x++) { out[x] = gray[x]; out[(h - 1) * w + x] = gray[(h - 1) * w + x]; }
+      for (let y = 0; y < h; y++) { out[y * w] = gray[y * w]; out[y * w + (w - 1)] = gray[y * w + (w - 1)]; }
+      return out;
+    }
+    function boxBlur(gray, w, h, r = 1) {
+      const out = new Uint8ClampedArray(gray.length);
+      const tmp = new Float32Array(gray.length);
+      const iarr = 1 / (r + r + 1);
+      // horizontal
+      for (let y = 0; y < h; y++) {
+        let ti = y * w, li = ti, ri = ti + r;
+        let fv = gray[ti], lv = gray[ti + w - 1], val = (r + 1) * fv;
+        for (let j = 0; j < r; j++) val += gray[ti + j];
+        for (let j = 0; j <= r; j++) { val += gray[ri++] - fv; tmp[ti++] = val * iarr; }
+        for (let j = r + 1; j < w - r; j++) { val += gray[ri++] - gray[li++]; tmp[ti++] = val * iarr; }
+        for (let j = w - r; j < w; j++) { val += lv - gray[li++]; tmp[ti++] = val * iarr; }
+      }
+      // vertical
+      for (let x = 0; x < w; x++) {
+        let ti = x, li = ti, ri = ti + r * w;
+        let fv = tmp[ti], lv = tmp[ti + w * (h - 1)], val = (r + 1) * fv;
+        for (let j = 0; j < r; j++) val += tmp[ti + j * w];
+        for (let j = 0; j <= r; j++) { val += tmp[ri] - fv; out[ti] = (val * iarr) | 0; ri += w; ti += w; }
+        for (let j = r + 1; j < h - r; j++) { val += tmp[ri] - tmp[li]; out[ti] = (val * iarr) | 0; li += w; ri += w; ti += w; }
+        for (let j = h - r; j < h; j++) { val += lv - tmp[li]; out[ti] = (val * iarr) | 0; li += w; ti += w; }
+      }
+      return out;
+    }
+    function unsharp(gray, w, h, radius = 1, amount = 1.0) {
+      const blurred = boxBlur(gray, w, h, radius);
+      const out = new Uint8ClampedArray(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        let v = gray[i] + amount * (gray[i] - blurred[i]);
+        out[i] = v < 0 ? 0 : (v > 255 ? 255 : v | 0);
+      }
+      return out;
+    }
+    function integralImages(gray, w, h) {
+      const I = new Float64Array((w + 1) * (h + 1));
+      const I2 = new Float64Array((w + 1) * (h + 1));
+      for (let y = 1; y <= h; y++) {
+        let rowsum = 0, rowsum2 = 0;
+        for (let x = 1; x <= w; x++) {
+          const g = gray[(y - 1) * w + (x - 1)];
+          rowsum += g; rowsum2 += g * g;
+          const idx = y * (w + 1) + x;
+          I[idx]  = I[idx - (w + 1)] + rowsum;
+          I2[idx] = I2[idx - (w + 1)] + rowsum2;
+        }
+      }
+      return { I, I2 };
+    }
+    function sauvola(gray, w, h, window = 25, k = 0.34, R = 128) {
+      const r = (window | 0) < 3 ? 3 : (window | 0);
+      const half = (r / 2) | 0;
+      const out = new Uint8ClampedArray(gray.length);
+      const { I, I2 } = integralImages(gray, w, h);
+      const at  = (X, Y) => I[ Y * (w + 1) + X ];
+      const at2 = (X, Y) => I2[ Y * (w + 1) + X ];
+      for (let y = 0; y < h; y++) {
+        const y0 = Math.max(0, y - half), y1 = Math.min(h - 1, y + half);
+        for (let x = 0; x < w; x++) {
+          const x0 = Math.max(0, x - half), x1 = Math.min(w - 1, x + half);
+          const A = x0, B = y0, C = x1 + 1, D = y1 + 1;
+          const area = (x1 - x0 + 1) * (y1 - y0 + 1);
+          const sum  = at(C, D) - at(A, D) - at(C, B) + at(A, B);
+          const sum2 = at2(C, D) - at2(A, D) - at2(C, B) + at2(A, B);
+          const mean = sum / area;
+          const varc = Math.max(0, (sum2 / area) - mean * mean);
+          const std  = Math.sqrt(varc);
+          const T    = mean * (1 + k * ((std / R) - 1));
+          out[y * w + x] = (gray[y * w + x] > T) ? 255 : 0;
+        }
+      }
+      return out;
+    }
+    function otsuThreshold(gray, w, h) {
+      const hist = new Uint32Array(256);
+      for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+      let sum = 0; for (let t = 0; t < 256; t++) sum += t * hist[t];
+      let sumB = 0, wB = 0, max = 0, thr = 127;
+      const total = w * h;
+      for (let t = 0; t < 256; t++) {
+        wB += hist[t]; if (!wB) continue;
+        const wF = total - wB; if (!wF) break;
+        sumB += t * hist[t];
+        const mB = sumB / wB, mF = (sum - sumB) / wF;
+        const between = wB * wF * (mB - mF) ** 2;
+        if (between > max) { max = between; thr = t; }
+      }
+      const out = new Uint8ClampedArray(gray.length);
+      for (let i = 0; i < gray.length; i++) out[i] = gray[i] >= thr ? 255 : 0;
+      return out;
+    }
+    function rotateCanvas(srcCanvas, angleDeg) {
+      const rad = angleDeg * Math.PI / 180;
+      const s = Math.sin(rad), c = Math.cos(rad);
+      const w = srcCanvas.width, h = srcCanvas.height;
+      const nw = Math.ceil(Math.abs(w * c) + Math.abs(h * s));
+      const nh = Math.ceil(Math.abs(w * s) + Math.abs(h * c));
+      const dst = document.createElement('canvas');
+      dst.width = nw; dst.height = nh;
+      const ctx = dst.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.translate(nw / 2, nh / 2);
+      ctx.rotate(rad);
+      ctx.drawImage(srcCanvas, -w / 2, -h / 2);
+      return dst;
+    }
+
+    // ===== OCR core =====
+    let activeWorker = null;
+
+    async function recognizeWithParams(worker, imageSource, params, label = 'pass') {
+      await worker.setParameters(params);
+      const { data } = await worker.recognize(imageSource);
+      return { text: data.text || '', words: data.words || [], label };
+    }
+
+    async function preprocessDataUrl(dataUrl, {
+      targetScale = 2.5,
+      adaptive = 'sauvola',
+      denoise = true,
+      unsharpAmount = 0.8,
+      sauvolaWindow = 35,
+      sauvolaK = 0.25,
+      brightness = 0.0,
+      contrast = 1.10,
+    } = {}) {
+      const img = await loadImage(dataUrl);
+      const maxSide = 4000;
+      const w = Math.min(Math.floor(img.width * targetScale), maxSide);
+      const h = Math.min(Math.floor(img.height * targetScale), maxSide);
+      let c = canvasFrom(img, w, h);
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+
+      const { gray, img: imgData } = toGrayUint8(ctx, w, h);
+      for (let i = 0; i < gray.length; i++) {
+        let g = gray[i];
+        g = Math.max(0, Math.min(255, Math.round((g + brightness) * contrast)));
+        gray[i] = g;
+      }
+      let work = gray;
+      if (denoise) work = median3x3(work, w, h);
+      if (unsharpAmount > 0) work = unsharp(work, w, h, 1, unsharpAmount);
+      if (adaptive === 'sauvola') work = sauvola(work, w, h, sauvolaWindow, sauvolaK, 128);
+      else if (adaptive === 'otsu') work = otsuThreshold(work, w, h);
+
+      fromGrayToCtx(work, imgData, ctx);
+      const sum = work.reduce((a, b) => a + b, 0) / (255 * work.length);
+      if (sum < 0.4) { for (let i = 0; i < work.length; i++) work[i] = 255 - work[i]; fromGrayToCtx(work, imgData, ctx); }
+      return c;
+    }
+
+    async function _ocrFromDataUrlAdv(dataUrl, options = {}, onProgress) {
+      await _ensureTesseract();
+      showProgress(6, 'Initializing OCR…');
+
+      const {
+        lang = 'eng',
+        extraLangs = '',
+        oem = 1,
+        psmPrimary = 6,
+        psmSecondary = 3,
+        dpi = 300,
+        allowlist = null,
+        denylist = null,
+        numeric = false,
+        preserveInterwordSpaces = true,
+        targetScale = 2.5,
+        adaptive = 'sauvola',
+        denoise = true,
+        unsharpAmount = 0.8,
+        sauvolaWindow = 35,
+        sauvolaK = 0.25,
+        langPath = 'https://tessdata.projectnaptha.com/4.0.0_best/'
+      } = options;
+
+      const languages = (extraLangs && !extraLangs.includes(lang))
+        ? `${lang}+${extraLangs}` : (extraLangs || lang);
+
+      try {
+        showProgress(15, 'Preprocessing image…');
+        let preCanvas = await preprocessDataUrl(dataUrl, {
+          targetScale, adaptive, denoise, unsharpAmount, sauvolaWindow, sauvolaK
+        });
+
+        showProgress(28, 'Loading OCR engine…');
+        const worker = await Tesseract.createWorker(languages, oem, {
+          langPath,
+          logger: (m) => {
+            let progress = 28;
+            let status = 'Loading';
+            if (m.status === 'loading tesseract core') { progress = 32; status = 'Loading core'; }
+            else if (m.status === 'initializing tesseract') { progress = 36; status = 'Initializing'; }
+            else if (m.status === 'loading language traineddata') { progress = 42; status = 'Loading language'; }
+            else if (m.status === 'recognizing text') {
+              progress = 60 + Math.round(m.progress * 35);
+              status = `Recognizing… ${Math.round(m.progress * 100)}%`;
+            }
+            showProgress(progress, status);
+            if (onProgress && typeof onProgress === 'function') {
+              try { onProgress({ status: m.status, progress: m.progress }); } catch (_) {}
+            }
+          }
+        });
+        activeWorker = worker;
+
+        showProgress(45, 'Detecting orientation…');
+        try {
+          const det = await worker.detect(preCanvas);
+          const angle = (det?.data?.orientation?.deg ?? 0);
+          if (angle && Math.abs(angle) > 0.1) preCanvas = rotateCanvas(preCanvas, -angle);
+        } catch (_) { /* ignore */ }
+
+        const baseParams = {
+          tessedit_pageseg_mode: String(psmPrimary),
+          user_defined_dpi: String(dpi),
+        };
+        if (allowlist) baseParams['tessedit_char_whitelist'] = String(allowlist);
+        if (denylist)  baseParams['tessedit_char_blacklist'] = String(denylist);
+        if (numeric)   baseParams['classify_bln_numeric_mode'] = '1';
+        if (preserveInterwordSpaces) baseParams['preserve_interword_spaces'] = '1';
+
+        showProgress(60, 'Pass 1 (PSM 6)…');
+        const pass1 = await recognizeWithParams(worker, preCanvas, { ...baseParams, tessedit_pageseg_mode: String(psmPrimary) }, 'psm6');
+        const getConfidence = (words) => (words && words.length) ? words.reduce((s, w) => s + w.confidence, 0) / words.length : 0;
+        const pass1Confidence = getConfidence(pass1.words);
+        let best = pass1;
+
+        if (pass1Confidence < 90) {
+          showProgress(85, 'Pass 2 (PSM 3)…');
+          const pass2 = await recognizeWithParams(worker, preCanvas, { ...baseParams, tessedit_pageseg_mode: String(psmSecondary) }, 'psm3');
+          const score = (text, confidence) => (String(text || '').replace(/\s+/g, '').length) * confidence;
+          best = (score(pass2.text, getConfidence(pass2.words)) > score(pass1.text, pass1Confidence)) ? pass2 : pass1;
+        }
+
+        await worker.terminate();
+        activeWorker = null;
+        showProgress(100, 'Done!');
+        setTimeout(hideProgress, 400);
+        return best.text;
+      } catch (err) {
+        console.error('[OCR]', err);
+        hideProgress();
+        if (activeWorker) { try { await activeWorker.terminate(); } catch (_) {} activeWorker = null; }
+        throw new Error('OCR processing failed: ' + (err?.message ?? String(err)));
+      }
+    }
+
+    // Public OCR API (for Flutter interop)
+    window.ocrFromImageAdv = (dataUrl, options, onProgress) =>
+      _ocrFromDataUrlAdv(String(dataUrl), options || {}, (typeof onProgress === 'function' ? onProgress : null));
+
+    window.ocrFromImage = (dataUrl, lang, onProgress) =>
+      _ocrFromDataUrlAdv(String(dataUrl), { lang: lang || 'eng' }, (typeof onProgress === 'function' ? onProgress : null));
+
+    window.cancelOCR = async function () {
+      if (activeWorker) {
+        try { await activeWorker.terminate(); } catch (_) {}
+        activeWorker = null;
+        hideProgress();
+        return true;
+      }
+      return false;
+    };
+
+    // ===== Save Loader UI helpers =====
+    function showSaveLoader() {
+      const m = document.getElementById('save-loader');
+      if (m) m.style.display = 'block';
+    }
+    function hideSaveLoader() {
+      const m = document.getElementById('save-loader');
+      if (m) m.style.display = 'none';
+    }
+    function updateSaveUI({ percent = 0, status = '', fileIndex = 0, totalFiles = 0, bytesDone = 0, bytesTotal = 0 }) {
+      const fill = document.getElementById('save-progress-fill');
+      const st   = document.getElementById('save-status');
+      const met  = document.getElementById('save-metrics');
+      if (fill) fill.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+      if (st)   st.textContent = status || '';
+      if (met)  met.textContent =
+        `${fileIndex}/${totalFiles} files • ${(bytesDone/1024).toFixed(1)} KB of ${(bytesTotal/1024).toFixed(1)} KB`;
+    }
+
+    // ===== File Save Helpers =====
+    (async () => {
+      async function openHandlesDB() {
+        return new Promise((res, rej) => {
+          const rq = indexedDB.open('file-handles-db', 1);
+          rq.onupgradeneeded = () => rq.result.createObjectStore('handles');
+          rq.onsuccess = () => res(rq.result);
+          rq.onerror = () => rej(rq.error);
+        });
+      }
+      async function saveHandle(name, handle) {
+        const db = await openHandlesDB();
+        const tx = db.transaction('handles', 'readwrite');
+        tx.objectStore('handles').put(handle, name);
+        return new Promise((res, rej) => {
+          tx.oncomplete = () => res();
+          tx.onerror = () => rej(tx.error);
+        });
+      }
+
+      let pendingSaveJson = null;
+
+      // Public API for your app/Flutter to queue files and reveal the button
+      window.prepareFilesToSave = function(jsonString) {
+        pendingSaveJson = jsonString;
+        const btn = document.getElementById("saveBtn");
+        if (btn) btn.style.display = "inline-block";
+      };
+
+      // Progress + cancel aware save
+      window.saveFilesWithUserGesture = async function () {
+        if (!pendingSaveJson) return;
+
+        // Parse & precompute totals
+        let cancel = false;
+        const cancelBtn = document.getElementById('save-cancel');
+        const files = JSON.parse(pendingSaveJson);
+        const totalFiles = files.length;
+        const totalBytes = files.reduce((sum, f) => sum + (f.textContent ? new Blob([f.textContent]).size : 0), 0);
+        let bytesDone = 0;
+
+        const onCancel = () => { cancel = true; };
+        if (cancelBtn) cancelBtn.addEventListener('click', onCancel, { once: true });
+
+        showSaveLoader();
+        updateSaveUI({ percent: 0, status: 'Requesting folder access…', fileIndex: 0, totalFiles, bytesDone, bytesTotal: totalBytes });
+
+        const t0 = performance.now();
+        try {
+          if (!('showDirectoryPicker' in window)) {
+            throw new Error('This browser does not support the File System Access API.');
+          }
+
+          const rootHandle = await window.showDirectoryPicker();
+          await saveHandle('project-root', rootHandle);
+
+          for (let i = 0; i < files.length; i++) {
+            if (cancel) throw new Error('Save cancelled by user');
+
+            const { folderPath = '', fileName, textContent = '' } = files[i];
+            const fileBytes = new Blob([textContent]).size;
+
+            updateSaveUI({
+              percent: (bytesDone / Math.max(1, totalBytes)) * 100,
+              status: `Creating ${(folderPath ? folderPath + '/' : '')}${fileName}`,
+              fileIndex: i, totalFiles, bytesDone, bytesTotal: totalBytes
+            });
+
+            // Ensure directory structure
+            const parts = folderPath.split('/').filter(Boolean);
+            let dir = rootHandle;
+            for (const p of parts) {
+              if (cancel) throw new Error('Save cancelled by user');
+              dir = await dir.getDirectoryHandle(p, { create: true });
+            }
+
+            // Write (streaming for large files)
+            const handle = await dir.getFileHandle(fileName, { create: true });
+            const writable = await handle.createWritable();
+
+            const encoder = new TextEncoder();
+            const chunk = encoder.encode(textContent);
+
+            const CHUNK = 256 * 1024; // 256 KB
+            if (chunk.byteLength > CHUNK) {
+              for (let offset = 0; offset < chunk.byteLength; offset += CHUNK) {
+                if (cancel) { try { await writable.abort(); } catch {} throw new Error('Save cancelled by user'); }
+                const slice = chunk.subarray(offset, Math.min(offset + CHUNK, chunk.byteLength));
+                await writable.write(slice);
+
+                const written = Math.min(CHUNK, slice.byteLength);
+                bytesDone += written;
+
+                updateSaveUI({
+                  percent: (bytesDone / Math.max(1, totalBytes)) * 100,
+                  status: `Writing ${fileName}…`,
+                  fileIndex: i + 1, totalFiles, bytesDone, bytesTotal: totalBytes
+                });
+              }
+            } else {
+              await writable.write(chunk);
+              bytesDone += fileBytes;
+              updateSaveUI({
+                percent: (bytesDone / Math.max(1, totalBytes)) * 100,
+                status: `Wrote ${fileName}`,
+                fileIndex: i + 1, totalFiles, bytesDone, bytesTotal: totalBytes
+              });
+            }
+
+            await writable.close();
+          }
+
+          // Done
+          updateSaveUI({ percent: 100, status: 'All files saved 🎉', fileIndex: totalFiles, totalFiles, bytesDone, bytesTotal: totalBytes });
+          const elapsed = Math.max(1, Math.round(performance.now() - t0));
+          setTimeout(() => {
+            hideSaveLoader();
+            alert(`✅ Saved ${totalFiles} files in ${(elapsed/1000).toFixed(2)}s`);
+          }, 350);
+
+          // Reset
+          const btn = document.getElementById('saveBtn');
+          if (btn) btn.style.display = 'none';
+          pendingSaveJson = null;
+
+        } catch (err) {
+          hideSaveLoader();
+          alert(`❌ Error: ${err.message}`);
+        } finally {
+          if (cancelBtn) {
+            try { cancelBtn.removeEventListener('click', onCancel); } catch {}
+          }
+        }
+      };
+    })();
+  </script>
+</body>
+</html>

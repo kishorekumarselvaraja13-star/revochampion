@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /auth
+Disallow: /verify
+Disallow: /dashboard
+
+Sitemap: https://revochamp.pages.dev/sitemap.xml

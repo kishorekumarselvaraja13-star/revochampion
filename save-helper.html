@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Revochamp Save Helper</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>body{font-family:system-ui,Arial,sans-serif; padding:24px} button{font-size:16px;padding:10px 16px}</style>
+</head>
+<body>
+  <h1>Grant folder & Save</h1>
+  <p>Click the button below to choose a folder and save your generated files.</p>
+  <button id="save" disabled>Choose Folder & Save</button>
+
+  <script>
+    let pendingFiles = null;
+
+    // Receive files from the opener (must be same origin)
+    window.addEventListener('message', (e) => {
+      try {
+        if (new URL(e.origin).origin !== location.origin) return;
+        if (e.data && e.data.type === 'REVO_FILES' && Array.isArray(e.data.files)) {
+          pendingFiles = e.data.files;
+          document.getElementById('save').disabled = false;
+        }
+      } catch (_) {}
+    });
+
+    document.getElementById('save').addEventListener('click', async () => {
+      if (!pendingFiles) return;
+      try {
+        const root = await window.showDirectoryPicker();
+        for (const { folderPath = '', fileName, textContent = '' } of pendingFiles) {
+          let dir = root;
+          for (const p of folderPath.split('/').filter(Boolean)) {
+            dir = await dir.getDirectoryHandle(p, { create: true });
+          }
+          const fh = await dir.getFileHandle(fileName, { create: true });
+          const w = await fh.createWritable();
+          await w.write(textContent);
+          await w.close();
+        }
+        alert('✅ Saved!');
+        window.close(); // optional
+      } catch (err) {
+        alert(`❌ ${err && err.message ? err.message : err}`);
+      }
+    });
+  </script>
+</body>
+</html>

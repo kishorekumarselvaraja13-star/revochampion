@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="$FLUTTER_BASE_HREF">
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+<title>Revochamp – AI UI Builder & Flutter Code Generator</title>
+<meta name="description" content="AI-powered visual UI builder and code generator for Flutter, React, and Angular. Design fast, export clean code.">
+<link rel="canonical" href="https://revochamp.surge.sh/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta property="og:title" content="Revochamp – AI UI Builder & Code Generator">
+<meta property="og:description" content="Design visually. Export clean code for Flutter, React, Angular.">
+<meta property="og:image" content="https://revochamp.surge.sh/assets/preview.png">
+<meta property="og:url" content="https://revochamp.surge.sh/">
+<meta property="og:type" content="website">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Revochamp – AI UI Builder & Code Generator">
+<meta name="twitter:description" content="Build UI with AI. Export clean code.">
+<meta name="twitter:image" content="https://revochamp.surge.sh/assets/preview.png">
+<!-- <meta name="google-site-verification" content="MixLRF-hIDY0tjG-lDpL0vpWwFHlx9zZAlkufFttCf0" /> -->
+<meta name="google-site-verification" content="ug4Ghw8OcIBLRUXby_Djh948Wi_1bd26Goymj5BHg9U" />
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="A new Flutter project.">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="fluttergenai">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>fluttergenai</title>
+  <link rel="manifest" href="manifest.json">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Revochamp",
+  "url": "https://revochamp.surge.sh/",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web",
+  "description": "AI-powered visual UI builder and code generator for Flutter, React, Angular.",
+  "image": "https://revochamp.surge.sh/assets/preview.png",
+  "creator": {
+    "@type": "Organization",
+    "name": "Revochamp"
+  }
+}
+</script>
+</head>
+<style>
+  /* ===== Global App Loader (pre-Flutter) ===== */
+  #app-loader {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background: radial-gradient(1200px 600px at 70% -10%, rgba(59,130,246,.35), transparent 60%),
+                radial-gradient(900px 500px at -10% 110%, rgba(6,182,212,.30), transparent 55%),
+                #0f1220;
+    color: #fff; z-index: 99999;
+    transition: opacity .35s ease, visibility .35s ease;
+  }
+  #app-loader.hidden { opacity: 0; visibility: hidden; }
+
+  .app-loader-box {
+    width: min(520px, 92vw);
+    padding: 28px 24px;
+    border-radius: 16px;
+    background: rgba(22,27,43,.55);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 40px rgba(0,0,0,.35);
+    text-align: center;
+  }
+  .app-brand {
+    display:flex; align-items:center; justify-content:center; gap:12px;
+    margin-bottom: 12px;
+  }
+  .app-logo {
+    width: 42px; height: 42px; border-radius: 10px;
+    background: linear-gradient(135deg, #3B82F6, #06B6D4);
+    box-shadow: 0 6px 18px rgba(6,182,212,.35);
+  }
+  .app-title {
+    font-weight: 800; letter-spacing:.2px; font-size: 20px;
+  }
+  .app-sub { opacity:.85; font-size: 13px; margin-top:4px; }
+
+  .app-progress {
+    margin: 16px 0 6px;
+    height: 10px; border-radius: 999px; overflow: hidden;
+    background: rgba(255,255,255,.08);
+  }
+  .app-progress > i {
+    display:block; height: 100%; width: 28%;
+    background: linear-gradient(90deg, rgba(255,255,255,.0), rgba(255,255,255,.5), rgba(255,255,255,.0));
+    animation: slide 1.2s linear infinite;
+  }
+  @keyframes slide {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(350%); }
+  }
+  .app-hint { font-size: 12px; opacity:.7; }
+  @media (prefers-reduced-motion: reduce) {
+    .app-progress > i { animation: none; width: 45%; }
+  }
+</style>
+
+  <style>
+    /* Loading indicator for OCR processing */
+    #ocr-loading {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0, 0, 0, 0.85);
+      color: #fff;
+      padding: 20px 24px;
+      border-radius: 12px;
+      z-index: 10000;
+      text-align: center;
+      width: 360px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: #2e2e2e;
+      border-radius: 999px;
+      margin: 12px 0 6px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #4caf50, #66bb6a);
+      width: 0%;
+      transition: width 200ms linear;
+    }
+
+    #ocr-status {
+      opacity: 0.9;
+      font-size: 13px;
+    }
+
+    #ocr-loading button {
+      margin-top: 10px;
+      background: #444;
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+  (function () {
+    const loader = document.getElementById('app-loader');
+    if (!loader) return;
+
+    // Hide when Flutter paints its first frame
+    const hide = () => loader.classList.add('hidden');
+
+    // Flutter web dispatches this as soon as the first frame renders
+    window.addEventListener('flutter-first-frame', hide, { once: true });
+
+    // Safety timeout (never leave users stuck)
+    const timeoutMs = 12000; // 12s
+    setTimeout(() => hide(), timeoutMs);
+
+    // If the bootstrap script errors, still remove loader with a message
+    window.addEventListener('error', (e) => {
+      // Don’t hide immediately; let users see something happened
+      setTimeout(() => hide(), 1200);
+    }, { once: true });
+  })();
+</script>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js"></script>
+
+  <!-- Load Flutter Web -->
+  <script src="flutter_bootstrap.js" async></script>
+
+  <!-- Save Files Button (visible only after generation) -->
+  <button id="saveBtn"
+          onclick="saveFilesWithUserGesture()"
+          style="position: fixed; top: 10px; right: 10px; z-index: 1000; display: none; padding: 10px 20px; font-size: 14px;">
+    📁 Save Files
+  </button>
+
+  <!-- Optional loading overlay -->
+  <div id="loader-overlay"
+       style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+              background: rgba(0,0,0,0.4); color: white; font-size: 20px;
+              justify-content: center; align-items: center; z-index: 999;">
+    Saving files...
+  </div>
+
+  <script>
+    // ============ GLOBAL STATE ============
+    let activeWorker = null;
+
+    // ============ IMAGE UTILS ============
+    function loadImage(dataUrl) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = (e) => reject(new Error('Failed to load image'));
+        img.src = dataUrl;
+      });
+    }
+
+    function canvasFrom(imgOrCanvas, w, h) {
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.drawImage(imgOrCanvas, 0, 0, w, h);
+      return c;
+    }
+
+    function toGrayUint8(ctx, w, h) {
+      const img = ctx.getImageData(0, 0, w, h);
+      const d = img.data;
+      const gray = new Uint8ClampedArray(w * h);
+      for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+        // perceptual luminance
+        gray[j] = (0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]) | 0;
+      }
+      return { gray, img };
+    }
+
+    function fromGrayToCtx(gray, img, ctx) {
+      const d = img.data;
+      for (let i = 0, j = 0; i < d.length; i += 4, j++) {
+        const g = gray[j];
+        d[i] = d[i + 1] = d[i + 2] = g;
+      }
+      ctx.putImageData(img, 0, 0);
+    }
+
+    function median3x3(gray, w, h) {
+      const out = new Uint8ClampedArray(gray.length);
+      const get = (x, y) => gray[y * w + x];
+      for (let y = 1; y < h - 1; y++) {
+        for (let x = 1; x < w - 1; x++) {
+          const n = [
+            get(x - 1, y - 1), get(x, y - 1), get(x + 1, y - 1),
+            get(x - 1, y), get(x, y), get(x + 1, y),
+            get(x - 1, y + 1), get(x, y + 1), get(x + 1, y + 1)
+          ];
+          n.sort((a, b) => a - b);
+          out[y * w + x] = n[4];
+        }
+      }
+      // copy borders
+      for (let x = 0; x < w; x++) { out[x] = gray[x]; out[(h - 1) * w + x] = gray[(h - 1) * w + x]; }
+      for (let y = 0; y < h; y++) { out[y * w] = gray[y * w]; out[y * w + (w - 1)] = gray[y * w + (w - 1)]; }
+      return out;
+    }
+
+    // Fast box blur (separable) for unsharp mask
+    function boxBlur(gray, w, h, r = 1) {
+      const out = new Uint8ClampedArray(gray.length);
+      const tmp = new Float32Array(gray.length);
+
+      // horizontal
+      const iarr = 1 / (r + r + 1);
+      for (let y = 0; y < h; y++) {
+        let ti = y * w, li = ti, ri = ti + r;
+        let fv = gray[ti], lv = gray[ti + w - 1], val = (r + 1) * fv;
+        for (let j = 0; j < r; j++) val += gray[ti + j];
+        for (let j = 0; j <= r; j++) { val += gray[ri++] - fv; tmp[ti++] = val * iarr; }
+        for (let j = r + 1; j < w - r; j++) { val += gray[ri++] - gray[li++]; tmp[ti++] = val * iarr; }
+        for (let j = w - r; j < w; j++) { val += lv - gray[li++]; tmp[ti++] = val * iarr; }
+      }
+      // vertical
+      for (let x = 0; x < w; x++) {
+        let ti = x, li = ti, ri = ti + r * w;
+        let fv = tmp[ti], lv = tmp[ti + w * (h - 1)], val = (r + 1) * fv;
+        for (let j = 0; j < r; j++) val += tmp[ti + j * w];
+        for (let j = 0; j <= r; j++) { val += tmp[ri] - fv; out[ti] = (val * iarr) | 0; ri += w; ti += w; }
+        for (let j = r + 1; j < h - r; j++) { val += tmp[ri] - tmp[li]; out[ti] = (val * iarr) | 0; li += w; ri += w; ti += w; }
+        for (let j = h - r; j < h; j++) { val += lv - tmp[li]; out[ti] = (val * iarr) | 0; li += w; ti += w; }
+      }
+      return out;
+    }
+
+    function unsharp(gray, w, h, radius = 1, amount = 1.0) {
+      const blurred = boxBlur(gray, w, h, radius);
+      const out = new Uint8ClampedArray(gray.length);
+      for (let i = 0; i < gray.length; i++) {
+        let v = gray[i] + amount * (gray[i] - blurred[i]);
+        out[i] = v < 0 ? 0 : (v > 255 ? 255 : v | 0);
+      }
+      return out;
+    }
+
+    // Integral image helpers for Sauvola
+    function integralImages(gray, w, h) {
+      const I = new Float64Array((w + 1) * (h + 1));
+      const I2 = new Float64Array((w + 1) * (h + 1));
+      for (let y = 1; y <= h; y++) {
+        let rowsum = 0, rowsum2 = 0;
+        for (let x = 1; x <= w; x++) {
+          const g = gray[(y - 1) * w + (x - 1)];
+          rowsum += g;
+          rowsum2 += g * g;
+          const idx = y * (w + 1) + x;
+          I[idx] = I[idx - (w + 1)] + rowsum;
+          I2[idx] = I2[idx - (w + 1)] + rowsum2;
+        }
+      }
+      return { I, I2 };
+    }
+
+    function sauvola(gray, w, h, window = 25, k = 0.34, R = 128) {
+      const r = (window | 0) < 3 ? 3 : (window | 0);
+      const half = (r / 2) | 0;
+      const out = new Uint8ClampedArray(gray.length);
+      const { I, I2 } = integralImages(gray, w, h);
+
+      const at = (X, Y) => I[Y * (w + 1) + X];
+      const at2 = (X, Y) => I2[Y * (w + 1) + X];
+
+      for (let y = 0; y < h; y++) {
+        const y0 = Math.max(0, y - half), y1 = Math.min(h - 1, y + half);
+        for (let x = 0; x < w; x++) {
+          const x0 = Math.max(0, x - half), x1 = Math.min(w - 1, x + half);
+          const A = x0, B = y0, C = x1 + 1, D = y1 + 1;
+          const area = (x1 - x0 + 1) * (y1 - y0 + 1);
+
+          const sum = at(C, D) - at(A, D) - at(C, B) + at(A, B);
+          const sum2 = at2(C, D) - at2(A, D) - at2(C, B) + at2(A, B);
+
+          const mean = sum / area;
+          const varc = Math.max(0, (sum2 / area) - mean * mean);
+          const std = Math.sqrt(varc);
+
+          const T = mean * (1 + k * ((std / R) - 1));
+          const v = gray[y * w + x] > T ? 255 : 0;
+          out[y * w + x] = v;
+        }
+      }
+      return out;
+    }
+
+    function otsuThreshold(gray, w, h) {
+      const hist = new Uint32Array(256);
+      for (let i = 0; i < gray.length; i++) hist[gray[i]]++;
+      let sum = 0; for (let t = 0; t < 256; t++) sum += t * hist[t];
+      let sumB = 0, wB = 0, max = 0, thr = 127;
+      const total = w * h;
+      for (let t = 0; t < 256; t++) {
+        wB += hist[t]; if (!wB) continue;
+        const wF = total - wB; if (!wF) break;
+        sumB += t * hist[t];
+        const mB = sumB / wB, mF = (sum - sumB) / wF;
+        const between = wB * wF * (mB - mF) * (mB - mF);
+        if (between > max) { max = between; thr = t; }
+      }
+      const out = new Uint8ClampedArray(gray.length);
+      for (let i = 0; i < gray.length; i++) out[i] = gray[i] >= thr ? 255 : 0;
+      return out;
+    }
+
+    function rotateCanvas(srcCanvas, angleDeg) {
+      const rad = angleDeg * Math.PI / 180;
+      const s = Math.sin(rad), c = Math.cos(rad);
+      const w = srcCanvas.width, h = srcCanvas.height;
+      // new bounds
+      const nw = Math.ceil(Math.abs(w * c) + Math.abs(h * s));
+      const nh = Math.ceil(Math.abs(w * s) + Math.abs(h * c));
+      const dst = document.createElement('canvas');
+      dst.width = nw; dst.height = nh;
+      const ctx = dst.getContext('2d');
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+      ctx.translate(nw / 2, nh / 2);
+      ctx.rotate(rad);
+      ctx.drawImage(srcCanvas, -w / 2, -h / 2);
+      return dst;
+    }
+
+    // ============ PROGRESS UI ============
+    function showProgress(p = 0, status = 'Processing...') {
+      const box = document.getElementById('ocr-loading');
+      const fill = document.querySelector('.progress-fill');
+      const txt = document.getElementById('ocr-status');
+      if (!box || !fill || !txt) return;
+      box.style.display = 'block';
+      fill.style.width = `${Math.max(0, Math.min(100, p))}%`;
+      txt.textContent = status;
+    }
+    function hideProgress() {
+      const box = document.getElementById('ocr-loading');
+      if (box) box.style.display = 'none';
+    }
+
+    // ============ PREPROCESS PIPELINE ============
+    async function preprocessDataUrl(dataUrl, {
+      // auto scale targeting x-height ≈ 22–28 px (~300 dpi rule of thumb)
+      targetScale = 2.5,
+      grayscale = true,
+      denoise = true,
+      adaptive = 'sauvola', // 'sauvola' | 'otsu' | 'none'
+      unsharpAmount = 0.8,   // 0 disables
+      sauvolaWindow = 35,
+      sauvolaK = 0.25,
+      brightness = 0.0,      // applied in gray domain (pre-binarize)
+      contrast = 1.10,       // applied in gray domain (pre-binarize)
+    } = {}) {
+      const img = await loadImage(dataUrl);
+      // scale up (cap size to avoid OOM)
+      const maxSide = 4000;
+      const w = Math.min(Math.floor(img.width * targetScale), maxSide);
+      const h = Math.min(Math.floor(img.height * targetScale), maxSide);
+      let c = canvasFrom(img, w, h);
+      const ctx = c.getContext('2d', { willReadFrequently: true });
+
+      // grayscale + brightness/contrast
+      const { gray, img: imgData } = toGrayUint8(ctx, w, h);
+      for (let i = 0; i < gray.length; i++) {
+        let g = gray[i];
+        g = Math.max(0, Math.min(255, Math.round((g + brightness) * contrast)));
+        gray[i] = g;
+      }
+      let work = gray;
+
+      if (denoise) work = median3x3(work, w, h);
+
+      // Apply unsharp mask BEFORE binarization
+      if (unsharpAmount > 0) {
+        work = unsharp(work, w, h, 1, unsharpAmount);
+      }
+
+      // adaptive binarization
+      if (adaptive === 'sauvola') {
+        work = sauvola(work, w, h, sauvolaWindow, sauvolaK, 128);
+      } else if (adaptive === 'otsu') {
+        work = otsuThreshold(work, w, h);
+      }
+
+      // push back to canvas
+      fromGrayToCtx(work, imgData, ctx);
+
+      // ensure black text on white background (helps PSM)
+      // (invert if mostly dark)
+      const sum = work.reduce((a, b) => a + b, 0) / (255 * work.length);
+      if (sum < 0.4) { // too dark → invert
+        for (let i = 0; i < work.length; i++) work[i] = 255 - work[i];
+        fromGrayToCtx(work, imgData, ctx);
+      }
+
+      return c; // return CANVAS for possible rotation
+    }
+
+    // ============ OCR CORE (Tesseract v5) ============
+    // ============ OCR CORE (Tesseract v5) ============x
+    async function recognizeWithParams(worker, imageSource, params, label = 'pass') {
+      await worker.setParameters(params);
+      const { data } = await worker.recognize(imageSource);
+      return { text: data.text || '', words: data.words || [], label };
+    }
+
+    async function _ocrFromDataUrlAdv(dataUrl, options = {}, onProgress) {
+      showProgress(6, 'Initializing OCR…');
+
+      const {
+        lang = 'eng',
+        extraLangs = '',
+        oem = 1,
+        psmPrimary = 6,
+        psmSecondary = 3,
+        dpi = 300,
+        allowlist = null,
+        denylist = null,
+        numeric = false,
+        preserveInterwordSpaces = true,
+
+        // preprocessing
+        targetScale = 2.5,
+        adaptive = 'sauvola',
+        denoise = true,
+        unsharpAmount = 0.8,
+        sauvolaWindow = 35,
+        sauvolaK = 0.25,
+
+        // language data
+        // langPath = 'https://tessdata.projectnaptha.com/4.0.0/'
+        langPath = 'https://tessdata.projectnaptha.com/4.0.0_best/'
+        // http://tessdata.projectnaptha.com/4.0.0_best/eng.traineddata.gz
+      } = options;
+
+      const languages = (extraLangs && !extraLangs.includes(lang))
+        ? `${lang}+${extraLangs}`
+        : (extraLangs || lang);
+
+      try {
+        // 1) Preprocess
+        showProgress(15, 'Preprocessing image…');
+        let preCanvas = await preprocessDataUrl(dataUrl, {
+          targetScale, adaptive, denoise, unsharpAmount, sauvolaWindow, sauvolaK
+        });
+
+        // 2) Create worker
+        showProgress(28, 'Loading OCR engine…');
+        const worker = await Tesseract.createWorker(languages, oem, {
+          langPath,
+          logger: (m) => {
+            // Keep UI responsive, avoid passing functions to worker (prevents DataCloneError)
+            let progress = 28;
+            let status = 'Loading';
+            if (m.status === 'loading tesseract core') { progress = 32; status = 'Loading core'; }
+            else if (m.status === 'initializing tesseract') { progress = 36; status = 'Initializing'; }
+            else if (m.status === 'loading language traineddata') { progress = 42; status = 'Loading language'; }
+            else if (m.status === 'recognizing text') {
+              progress = 60 + Math.round(m.progress * 35);
+              status = `Recognizing… ${Math.round(m.progress * 100)}%`;
+            }
+            showProgress(progress, status);
+            if (onProgress && typeof onProgress === 'function') {
+              try { onProgress({ status: m.status, progress: m.progress }); } catch (_) { }
+            }
+          }
+        });
+        activeWorker = worker;
+
+        // 3) Orientation detection (OSD)
+        showProgress(45, 'Detecting orientation…');
+        try {
+          // Tesseract.js detect() uses OSD; ensure 'osd' is loaded in languages
+          const det = await worker.detect(preCanvas);
+          const angle = (det && det.data && det.data.orientation && typeof det.data.orientation.deg === 'number')
+            ? det.data.orientation.deg : 0;
+          if (angle && Math.abs(angle) > 0.1) {
+            preCanvas = rotateCanvas(preCanvas, -angle); // deskew
+          }
+        } catch (e) {
+          // orientation may fail if OSD data missing; proceed anyway
+        }
+
+        // 4) Parameter base
+        const baseParams = {
+          tessedit_pageseg_mode: String(psmPrimary),
+          user_defined_dpi: String(dpi),
+        };
+        if (allowlist) baseParams['tessedit_char_whitelist'] = String(allowlist);
+        if (denylist) baseParams['tessedit_char_blacklist'] = String(denylist);
+        if (numeric) baseParams['classify_bln_numeric_mode'] = '1';
+        if (preserveInterwordSpaces) baseParams['preserve_interword_spaces'] = '1';
+
+        // 5) Two-pass strategy: PSM 6 then PSM 3 (pick best by heuristics)
+        showProgress(60, 'Pass 1 (PSM 6)…');
+        const pass1 = await recognizeWithParams(worker, preCanvas, { ...baseParams, tessedit_pageseg_mode: String(psmPrimary) }, 'psm6');
+
+        // Enhanced Heuristic pick with conditional second pass
+        const getConfidence = (words) => {
+          if (!words || words.length === 0) return 0;
+          return words.reduce((sum, w) => sum + w.confidence, 0) / words.length;
+        };
+
+        const pass1Confidence = getConfidence(pass1.words);
+        let best = pass1;
+
+        if (pass1Confidence < 90) { // Only run second pass if confidence is low
+          showProgress(85, 'Pass 2 (PSM 3)…');
+          const pass2 = await recognizeWithParams(worker, preCanvas, { ...baseParams, tessedit_pageseg_mode: String(psmSecondary) }, 'psm3');
+
+          const score = (text, confidence) => {
+            const cleaned = (text || '').replace(/\s+/g, '');
+            return cleaned.length * confidence;
+          };
+
+          const score1 = score(pass1.text, pass1Confidence);
+          const score2 = score(pass2.text, getConfidence(pass2.words));
+
+          best = (score2 > score1) ? pass2 : pass1;
+        }
+
+        await worker.terminate();
+        activeWorker = null;
+
+        showProgress(100, 'Done!');
+        setTimeout(hideProgress, 400);
+
+        return best.text;
+      } catch (err) {
+        console.error('[OCR]', err);
+        hideProgress();
+        // Ensure worker is stopped on error
+        if (activeWorker) {
+          try { await activeWorker.terminate(); } catch (_) { }
+          activeWorker = null;
+        }
+        throw new Error('OCR processing failed: ' + (err && err.message ? err.message : String(err)));
+      }
+    }
+
+    // ============ PUBLIC API (for Flutter/Dart JS interop) ============
+    // Advanced entry (preferred)
+    window.ocrFromImageAdv = function (dataUrl, options, onProgress) {
+      // Do not pass functions into workers; onProgress runs on main thread only
+      return _ocrFromDataUrlAdv(String(dataUrl), options || {}, typeof onProgress === 'function' ? onProgress : null);
+    };
+    // Backward compatible simple entry
+    window.ocrFromImage = function (dataUrl, lang, onProgress) {
+      return _ocrFromDataUrlAdv(String(dataUrl), { lang: lang || 'eng' }, typeof onProgress === 'function' ? onProgress : null);
+    };
+    // Cancel
+    window.cancelOCR = async function () {
+      if (activeWorker) {
+        try { await activeWorker.terminate(); } catch (_) { }
+        activeWorker = null;
+        hideProgress();
+        return true;
+      }
+      return false;
+    };
+  </script>
+
+  <div id="ocr-loading">
+    <strong>Processing OCR</strong>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div id="ocr-status">Initializing…</div>
+    <button onclick="window.cancelOCR()">Cancel</button>
+  </div>
+  <!-- JavaScript Logic -->
+  <script type="module">
+    (async () => {
+      async function openHandlesDB() {
+        return new Promise((res, rej) => {
+          const rq = indexedDB.open('file-handles-db', 1);
+          rq.onupgradeneeded = () => rq.result.createObjectStore('handles');
+          rq.onsuccess = () => res(rq.result);
+          rq.onerror = () => rej(rq.error);
+        });
+      }
+
+      async function saveHandle(name, handle) {
+        const db = await openHandlesDB();
+        const tx = db.transaction('handles', 'readwrite');
+        tx.objectStore('handles').put(handle, name);
+        return new Promise((res, rej) => {
+          tx.oncomplete = () => res();
+          tx.onerror = () => rej(tx.error);
+        });
+      }
+
+      function showLoader() {
+        document.getElementById('loader-overlay').style.display = 'flex';
+      }
+
+      function hideLoader() {
+        document.getElementById('loader-overlay').style.display = 'none';
+      }
+
+      let pendingSaveJson = null;
+
+      window.prepareFilesToSave = function(jsonString) {
+        pendingSaveJson = jsonString;
+        document.getElementById("saveBtn").style.display = "inline-block";
+      };
+
+      window.saveFilesWithUserGesture = async function () {
+        if (!pendingSaveJson) return;
+        showLoader();
+
+        try {
+          const files = JSON.parse(pendingSaveJson);
+          const rootHandle = await window.showDirectoryPicker();
+          await saveHandle('project-root', rootHandle);
+
+          for (const { folderPath, fileName, textContent } of files) {
+            const parts = folderPath.split('/').filter(Boolean);
+            let dir = rootHandle;
+            for (const p of parts) {
+              dir = await dir.getDirectoryHandle(p, { create: true });
+            }
+
+            const fileHandle = await dir.getFileHandle(fileName, { create: true });
+            const writable = await fileHandle.createWritable();
+            await writable.write(textContent);
+            await writable.close();
+          }
+
+          alert("✅ All files saved successfully!");
+          document.getElementById("saveBtn").style.display = "none";
+          pendingSaveJson = null;
+        } catch (err) {
+          alert(`❌ Error: ${err.message}`);
+        } finally {
+          hideLoader();
+        }
+      };
+    })();
+  </script>
+</body>
+
+</html>
